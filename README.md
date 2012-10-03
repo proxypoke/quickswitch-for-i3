@@ -10,4 +10,6 @@ interactive dmenu prompt.
 Dependencies
 ------------
 i3-quickswitch requires dmenu (which you likely already have installed), and
-i3-py, which you can install with `pip install i3-py`. 
+i3-py, which you can install with `pip install i3-py`.
+
+i3-quickswitch was tested in Python 2.7.3 and 3.2.3.
