@@ -9,12 +9,12 @@ interactive dmenu prompt.
 
 Here's how it looks in action:
 
-![screenshot](http://i.imgur.com/QeQrM.png)
+.. image:: http://i.imgur.com/QeQrM.png
 
 Dependencies
 ------------
 uickswitch requires dmenu (which you likely already have installed), and
-i3-py, which you can install with `pip install i3-py`.
+i3-py, which you can install with ``pip install i3-py``.
 
 quickswitch was tested in Python 2.7.3 and 3.2.3.
 

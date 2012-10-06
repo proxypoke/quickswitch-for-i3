@@ -26,6 +26,7 @@ import i3
 
 
 def dmenu(options):
+    '''Call dmenu with a list of options.'''
     cmd = subprocess.Popen(['dmenu', '-b', '-i', '-l', '20'],
                            stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE,
