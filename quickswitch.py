@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-# i3-quickswitch - quickly change to and locate windows in i3.
+# quickswitch for i3 - quickly change to and locate windows in i3.
 #
 # Author: slowpoke <mail+python at slowpoke dot io>
 # This program is Free Software under the terms of the
