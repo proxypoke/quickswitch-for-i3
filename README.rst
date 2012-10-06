@@ -23,3 +23,6 @@ Installation
 Quickswitch has a PyPI entry, so you can install it with ``pip install
 quickswitch-i3``. Alternatively, you can always manually run the setup file with
 ``python setup.py install``.
+
+Additionally, if you are an Arch user, you can install it from the AUR. The
+package is called ``quickswitch-i3``. The PKGBUILD is also included here.
