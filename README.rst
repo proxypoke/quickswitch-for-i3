@@ -20,4 +20,6 @@ quickswitch was tested in Python 2.7.3 and 3.2.3.
 
 Installation
 ------------
-Nothing automatic (yet). Drop it in your ~/bin or something. Be creative.
+Quickswitch has a PyPI entry, so you can install it with ``pip install
+quickswitch-i3``. Alternatively, you can always manually run the setup file with
+``python setup.py install``.

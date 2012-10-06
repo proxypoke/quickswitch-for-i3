@@ -22,14 +22,14 @@ from distutils.core import setup
 
 import quickswitch
 
-setup(name='quickswitch for i3',
+setup(name='quickswitch-i3',
       description='Quickly change to and locate windows in i3',
       long_description=open('README.rst').read(),
       version=quickswitch.__version__,
       author='slowpoke',
       author_email='mail+python at slowpoke dot io',
       url='https://github.com/proxypoke/quickswitch-for-i3',
-      scripts=['quickswitch'],
+      scripts=['quickswitch.py'],
       requires=['i3_py'],
       classifiers=['Intended Audience :: End Users/Desktop',
                    'Programming Language :: Python :: 2',
