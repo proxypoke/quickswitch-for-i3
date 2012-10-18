@@ -1,7 +1,7 @@
 # Maintainer: slowpoke <mail+aur at slowpoke dot io>
 pkgname='quickswitch-i3'
 pkgver=1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="quickly change to and locate windows in i3"
 arch=(any)
 url="https://github.com/proxypoke/quickswitch-for-i3"
@@ -16,8 +16,7 @@ backup=()
 options=(!emptydirs)
 install=
 source=('http://pypi.python.org/packages/source/q/quickswitch-i3/quickswitch-i3-1.0.tar.gz')
-md5sums=('d30d4e39cac32348ff63dfb821cf3c2b')
-
+md5sums=('255e07357ffdac11dd5730f9cdacfe97')
 
 package() {
   cd "$srcdir/$pkgname-$pkgver"
