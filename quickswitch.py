@@ -18,7 +18,7 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-__version__ = '1.0'
+__version__ = '1.1'
 
 
 import argparse
