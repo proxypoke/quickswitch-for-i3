@@ -21,6 +21,7 @@
 __version__ = '1.0'
 
 
+import argparse
 import subprocess
 import i3
 
@@ -35,20 +36,57 @@ def dmenu(options):
     return stdout.decode('utf-8').strip('\n')
 
 
-def main():
+def get_windows():
     windows = i3.filter(nodes=[])
+    return filter_windows(windows)
+
+
+def get_scratchpad():
+    scratchpad = i3.filter(name="__i3_scratch")[0]
+    nodes = scratchpad["floating_nodes"]
+    windows = i3.filter(tree=nodes, nodes=[])
+    return filter_windows(windows)
+
+
+def filter_windows(windows):
     lookup = {}
     for window in windows:
         name = window.get('name')
         id_ = window.get('window')
         if id_ is None:
-            # this is not an X window, ignore it
+            # this is not an X window, ignore it.
+            continue
+        if name.startswith("i3bar for output"):
+            # this is an i3bar, ignore it.
             continue
         lookup[name] = id_
+    print(lookup)
+    return lookup
 
+
+def get_scratchpad_window(window):
+    '''Does `scratchpad show` on the specified window.'''
+    return i3.scratchpad("show", id=window)
+
+
+def focus(window):
+    '''Focuses the given window.'''
+    return i3.focus(id=window)
+
+
+def main():
+    parser = argparse.ArgumentParser(description='''quickswitch for i3''')
+    parser.add_argument('-s', '--scratchpad', default=False, action="store_true",
+                        help="list scratchpad windows instead of regular ones")
+    args = parser.parse_args()
+
+    lookup_func = get_scratchpad if args.scratchpad else get_windows
+    focus_func = get_scratchpad_window if args.scratchpad else focus
+
+    lookup = lookup_func()
     target = dmenu(lookup.keys())
     id_ = lookup.get(target)
-    success = i3.focus(id=lookup.get(target)) if id_ is not None else False
+    success = focus_func(lookup.get(target)) if id_ is not None else False
 
     exit(0 if success else 1)
 
