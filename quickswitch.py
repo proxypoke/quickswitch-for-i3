@@ -1,4 +1,5 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
 # quickswitch for i3 - quickly change to and locate windows in i3.
 #
 # Author: slowpoke <mail+python at slowpoke dot io>
@@ -18,7 +19,7 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-__version__ = '1.1'
+__version__ = '1.2'
 
 
 import argparse
@@ -37,18 +38,38 @@ def dmenu(options):
 
 
 def get_windows():
+    '''Get all windows.'''
     windows = i3.filter(nodes=[])
     return filter_windows(windows)
 
 
 def get_scratchpad():
+    '''Get all windows on the scratchpad.'''
     scratchpad = i3.filter(name="__i3_scratch")[0]
     nodes = scratchpad["floating_nodes"]
     windows = i3.filter(tree=nodes, nodes=[])
     return filter_windows(windows)
 
 
+def get_workspaces():
+    '''Returns all workspace names.
+
+    NOTE: This returns a map of name → name, which is rather redundant, but
+    makes it possible to use the result without changing much in main().
+    '''
+    workspaces = i3.get_workspaces()
+    for ws in workspaces:
+        # filter_windows will set the value of all entries in the lookup table
+        # to the window id. We act as if the workspace name is the window id.
+        ws['window'] = ws['name']
+    return filter_windows(workspaces)
+
+
 def filter_windows(windows):
+    '''Create a lookup table from the given list of windows.
+
+    The returned dict is in the format window title → X window id.
+    '''
     lookup = {}
     for window in windows:
         name = window.get('name')
@@ -60,7 +81,6 @@ def filter_windows(windows):
             # this is an i3bar, ignore it.
             continue
         lookup[name] = id_
-    print(lookup)
     return lookup
 
 
@@ -74,14 +94,33 @@ def focus(window):
     return i3.focus(id=window)
 
 
+def goto_workspace(name):
+    '''Jump to the given workspace.'''
+    return i3.workspace(name)
+
+
 def main():
     parser = argparse.ArgumentParser(description='''quickswitch for i3''')
-    parser.add_argument('-s', '--scratchpad', default=False, action="store_true",
+
+    mutgrp = parser.add_mutually_exclusive_group()
+    mutgrp.add_argument('-s', '--scratchpad', default=False, action="store_true",
                         help="list scratchpad windows instead of regular ones")
+    mutgrp.add_argument('-w', '--workspaces', default=False,
+                        action="store_true",
+                        help="list workspaces instead of windows")
     args = parser.parse_args()
 
-    lookup_func = get_scratchpad if args.scratchpad else get_windows
-    focus_func = get_scratchpad_window if args.scratchpad else focus
+    lookup_func = get_windows
+    if args.scratchpad:
+        lookup_func = get_scratchpad
+    if args.workspaces:
+        lookup_func = get_workspaces
+
+    focus_func = focus
+    if args.scratchpad:
+        focus_func = get_scratchpad_window
+    if args.workspaces:
+        focus_func = goto_workspace
 
     lookup = lookup_func()
     target = dmenu(lookup.keys())
