@@ -88,6 +88,9 @@ def get_scratchpad_window(window):
     '''Does `scratchpad show` on the specified window.'''
     return i3.scratchpad("show", id=window)
 
+def move_window_here(window):
+    '''Does `move workspace current` on the specified window.'''
+    return i3.msg(0, "%s move workspace current" % i3.container(id=window))
 
 def focus(window):
     '''Focuses the given window.'''
@@ -101,6 +104,8 @@ def goto_workspace(name):
 
 def main():
     parser = argparse.ArgumentParser(description='''quickswitch for i3''')
+    parser.add_argument('-m', '--move', default=False, action="store_true",
+                        help="move window to the current workspace")
 
     mutgrp = parser.add_mutually_exclusive_group()
     mutgrp.add_argument('-s', '--scratchpad', default=False, action="store_true",
@@ -116,16 +121,19 @@ def main():
     if args.workspaces:
         lookup_func = get_workspaces
 
-    focus_func = focus
-    if args.scratchpad:
-        focus_func = get_scratchpad_window
-    if args.workspaces:
-        focus_func = goto_workspace
+    action_func = focus
+    if args.move:
+        action_func = move_window_here
+    else:
+        if args.scratchpad:
+            action_func = get_scratchpad_window
+        if args.workspaces:
+            action_func = goto_workspace
 
     lookup = lookup_func()
     target = dmenu(lookup.keys())
     id_ = lookup.get(target)
-    success = focus_func(lookup.get(target)) if id_ is not None else False
+    success = action_func(lookup.get(target)) if id_ is not None else False
 
     exit(0 if success else 1)
 
