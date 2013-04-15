@@ -24,7 +24,26 @@ __version__ = '1.2'
 
 import argparse
 import subprocess
-import i3
+import os
+
+try:
+    import i3
+except ImportError:
+    print("quickswitch requires i3-py.")
+    print("You can install it from the PyPI with ``pip install i3-py''.")
+    exit(1)
+
+
+def check_dmenu():
+    '''Check if dmenu is available.'''
+    try:
+        devnull = open(os.devnull)
+        subprocess.Popen(
+            ['dmenu', '-h'], stdout=devnull, stderr=devnull).communicate()
+    except OSError as e:
+        if e.errno == os.errno.ENOENT:
+            return False
+    return True
 
 
 def dmenu(options):
@@ -88,9 +107,11 @@ def get_scratchpad_window(window):
     '''Does `scratchpad show` on the specified window.'''
     return i3.scratchpad("show", id=window)
 
+
 def move_window_here(window):
     '''Does `move workspace current` on the specified window.'''
     return i3.msg(0, "%s move workspace current" % i3.container(id=window))
+
 
 def focus(window):
     '''Focuses the given window.'''
@@ -114,6 +135,11 @@ def main():
                         action="store_true",
                         help="list workspaces instead of windows")
     args = parser.parse_args()
+
+    if not check_dmenu():
+        print("quickswitch requires dmenu.")
+        print("Please install it using your distribution's package manager.")
+        exit(1)
 
     lookup_func = get_windows
     if args.scratchpad:

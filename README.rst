@@ -8,7 +8,11 @@ you to quickly switch to and locate windows on all your workspaces, using an
 interactive dmenu prompt.
 
 It also provides a similiar facility for scratchpad windows, which can be used
-by passing the ``-s`` or ``--scratchpad`` flag.
+by passing the ``-s`` or ``--scratchpad`` flag. If you don't want to jump to the
+window's workspace, but instead move the window to your curren workspace, use
+``-m`` or ``--move``. There's also a flag for jumping to workspaces by name -
+``-w`` or ``--workspaces`` - which might be useful if you have many named
+workspaces.
 
 Here's how it looks in action:
 
