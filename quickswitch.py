@@ -19,7 +19,7 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-__version__ = '1.3'
+__version__ = '1.4'
 
 
 import argparse
@@ -84,6 +84,16 @@ def get_workspaces():
     return filter_windows(workspaces)
 
 
+def next_empty():
+    '''Return the lowest numbered workspace that is empty.'''
+    workspaces = sorted([int(ws) for ws in get_workspaces().keys()
+                         if ws.isdecimal()])
+    for i in range(len(workspaces)):
+        if workspaces[i] != i + 1:
+            break
+    return str(i + 1)
+
+
 def filter_windows(windows):
     '''Create a lookup table from the given list of windows.
 
@@ -134,12 +144,20 @@ def main():
     mutgrp.add_argument('-w', '--workspaces', default=False,
                         action="store_true",
                         help="list workspaces instead of windows")
+    mutgrp.add_argument('-e', '--empty', default=False, action='store_true',
+                        help='go to the next empty, numbered workspace')
     args = parser.parse_args()
 
     if not check_dmenu():
         print("quickswitch requires dmenu.")
         print("Please install it using your distribution's package manager.")
         exit(1)
+
+    # jumping to the next empty workspaces doesn't require going through all
+    # the stuff below, as we don't need to call dmenu etc, so we just call it
+    # here and exit if the appropriate flag was given.
+    if args.empty:
+        exit(0 if goto_workspace(next_empty()) else 1)
 
     lookup_func = get_windows
     if args.scratchpad:

@@ -1,7 +1,7 @@
 # Maintainer: slowpoke <mail+aur at slowpoke dot io>
 pkgname='quickswitch-i3'
-pkgver=1.3
-pkgrel=2
+pkgver=1.4
+pkgrel=1
 pkgdesc="quickly change to and locate windows in i3"
 arch=(any)
 url="https://github.com/proxypoke/quickswitch-for-i3"
