@@ -1,10 +1,11 @@
 .PHONY: clean
 clean:
-	rm *.tar.*
+	# This will remove EVERYTHING that's not tracked by git. Use with care.
+	git clean -df
 
 .PHONY: dist
 dist:
-	py setup.py sdist upload
+	python setup.py sdist upload
 
 .PHONY: arch-source
 arch-source:
