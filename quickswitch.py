@@ -19,7 +19,7 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-__version__ = '1.4'
+__version__ = '1.4.1'
 
 
 import argparse
@@ -90,8 +90,8 @@ def next_empty():
                          if ws.isdecimal()])
     for i in range(len(workspaces)):
         if workspaces[i] != i + 1:
-            break
-    return str(i + 1)
+            return str(i + 1)
+    return str(len(workspaces) + 1)
 
 
 def filter_windows(windows):
