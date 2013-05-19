@@ -132,6 +132,22 @@ def goto_workspace(name):
     '''Jump to the given workspace.'''
     return i3.workspace(name)
 
+def get_dmenu_settings(args):
+    '''Extract the aditional options from argparse result to be given to dmenu'''
+    options = {
+        'prompt': '-p',
+        'font': '-fn',
+        'normal_background': '-nb',
+        'normal_foreground': '-nf',
+        'selected_background': '-sb',
+        'selected_foreground': '-sf',
+    }
+
+    res = [[cmd_arg, getattr(args, option)]
+            for option, cmd_arg in options.items()
+            if getattr(args, option)]
+
+    return [cmd_arg for settings in res for cmd_arg in settings]
 
 def main():
     parser = argparse.ArgumentParser(description='''quickswitch for i3''')
