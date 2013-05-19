@@ -46,9 +46,11 @@ def check_dmenu():
     return True
 
 
-def dmenu(options):
+def dmenu(options, dmenu_settings = []):
     '''Call dmenu with a list of options.'''
-    cmd = subprocess.Popen(['dmenu', '-b', '-i', '-l', '20'],
+    args = ['-b', '-i', '-l', '20'] + dmenu_settings
+
+    cmd = subprocess.Popen(['dmenu',] + args,
                            stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
@@ -201,7 +203,7 @@ def main():
             action_func = goto_workspace
 
     lookup = lookup_func()
-    target = dmenu(lookup.keys())
+    target = dmenu(lookup.keys(), get_dmenu_settings(args))
     id_ = lookup.get(target)
     success = action_func(lookup.get(target)) if id_ is not None else False
 
