@@ -146,6 +146,16 @@ def main():
                         help="list workspaces instead of windows")
     mutgrp.add_argument('-e', '--empty', default=False, action='store_true',
                         help='go to the next empty, numbered workspace')
+
+    #dmenu args
+    parser.add_argument('-fn', '--font', type=str, default='', help='choose dmenu font')
+
+    parser.add_argument('-p',  '--prompt', type=str, default='', help='set dmenu prompt')
+    parser.add_argument('-nb', '--normal-background', type=str, default='', help='set normal text background')
+    parser.add_argument('-nf', '--normal-foreground', type=str, default='', help='set normal text foreground')
+    parser.add_argument('-sb', '--selected-background', type=str, default='', help='set selected text background')
+    parser.add_argument('-sf', '--selected-foreground', type=str, default='', help='set selected text foreground')
+
     args = parser.parse_args()
 
     if not check_dmenu():
