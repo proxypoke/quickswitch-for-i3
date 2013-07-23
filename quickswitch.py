@@ -25,6 +25,7 @@ __version__ = '1.5'
 import argparse
 import subprocess
 import os
+import re
 
 try:
     import i3
@@ -62,6 +63,16 @@ def get_windows():
     '''Get all windows.'''
     windows = i3.filter(nodes=[])
     return create_lookup_table(windows)
+
+
+def find_window_by_regex(regex, move=False):
+    '''Find the first window whose title matches regex and focus or move it.'''
+    action = move_window_here if move else focus
+
+    cr = re.compile(regex)
+    for title, id in get_windows().items():
+        if cr.match(title):
+            action(id)
 
 
 def get_scratchpad():
@@ -147,8 +158,9 @@ def main():
                         help="list workspaces instead of windows")
     mutgrp.add_argument('-e', '--empty', default=False, action='store_true',
                         help='go to the next empty, numbered workspace')
+    mutgrp.add_argument('-r', '--regex',
+                        help='find the first window matching the regex and focus/move it')
 
-    #dmenu args
     parser.add_argument('-d', '--dmenu', default='dmenu -b -i -l 20', help='dmenu command, executed within a shell')
 
     args = parser.parse_args()
@@ -163,6 +175,10 @@ def main():
     # here and exit if the appropriate flag was given.
     if args.empty:
         exit(*goto_workspace(next_empty()))
+
+    if args.regex:
+        find_window_by_regex(args.regex, args.move)
+        exit(0)
 
     lookup_func = get_windows
     if args.scratchpad:
