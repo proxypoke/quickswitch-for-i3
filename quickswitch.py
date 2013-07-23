@@ -46,11 +46,11 @@ def check_dmenu():
     return True
 
 
-def dmenu(options, dmenu_settings = []):
+def dmenu(options, dmenu):
     '''Call dmenu with a list of options.'''
-    args = ['-b', '-i', '-l', '20'] + dmenu_settings
 
-    cmd = subprocess.Popen(['dmenu',] + args,
+    cmd = subprocess.Popen(dmenu,
+                           shell=True,
                            stdin=subprocess.PIPE,
                            stdout=subprocess.PIPE,
                            stderr=subprocess.PIPE)
@@ -134,23 +134,6 @@ def goto_workspace(name):
     '''Jump to the given workspace.'''
     return i3.workspace(name)
 
-def get_dmenu_settings(args):
-    '''Extract the aditional options from argparse result to be given to dmenu'''
-    options = {
-        'prompt': '-p',
-        'font': '-fn',
-        'normal_background': '-nb',
-        'normal_foreground': '-nf',
-        'selected_background': '-sb',
-        'selected_foreground': '-sf',
-    }
-
-    res = [[cmd_arg, getattr(args, option)]
-            for option, cmd_arg in options.items()
-            if getattr(args, option)]
-
-    return [cmd_arg for settings in res for cmd_arg in settings]
-
 def main():
     parser = argparse.ArgumentParser(description='''quickswitch for i3''')
     parser.add_argument('-m', '--move', default=False, action="store_true",
@@ -166,13 +149,7 @@ def main():
                         help='go to the next empty, numbered workspace')
 
     #dmenu args
-    parser.add_argument('-fn', '--font', type=str, default='', help='choose dmenu font')
-
-    parser.add_argument('-p',  '--prompt', type=str, default='', help='set dmenu prompt')
-    parser.add_argument('-nb', '--normal-background', type=str, default='', help='set normal text background')
-    parser.add_argument('-nf', '--normal-foreground', type=str, default='', help='set normal text foreground')
-    parser.add_argument('-sb', '--selected-background', type=str, default='', help='set selected text background')
-    parser.add_argument('-sf', '--selected-foreground', type=str, default='', help='set selected text foreground')
+    parser.add_argument('-d', '--dmenu', default='dmenu -b -i -l 20', help='dmenu command, executed within a shell')
 
     args = parser.parse_args()
 
@@ -203,7 +180,7 @@ def main():
             action_func = goto_workspace
 
     lookup = lookup_func()
-    target = dmenu(lookup.keys(), get_dmenu_settings(args))
+    target = dmenu(lookup.keys(), args.dmenu)
     id_ = lookup.get(target)
     success = action_func(lookup.get(target)) if id_ is not None else False
 
