@@ -61,7 +61,7 @@ def dmenu(options, dmenu):
 def get_windows():
     '''Get all windows.'''
     windows = i3.filter(nodes=[])
-    return filter_windows(windows)
+    return create_lookup_table(windows)
 
 
 def get_scratchpad():
@@ -69,7 +69,7 @@ def get_scratchpad():
     scratchpad = i3.filter(name="__i3_scratch")[0]
     nodes = scratchpad["floating_nodes"]
     windows = i3.filter(tree=nodes, nodes=[])
-    return filter_windows(windows)
+    return create_lookup_table(windows)
 
 
 def get_workspaces():
@@ -80,10 +80,10 @@ def get_workspaces():
     '''
     workspaces = i3.get_workspaces()
     for ws in workspaces:
-        # filter_windows will set the value of all entries in the lookup table
+        # create_lookup_table will set the value of all entries in the lookup table
         # to the window id. We act as if the workspace name is the window id.
         ws['window'] = ws['name']
-    return filter_windows(workspaces)
+    return create_lookup_table(workspaces)
 
 
 def next_empty():
@@ -96,7 +96,7 @@ def next_empty():
     return str(len(workspaces) + 1)
 
 
-def filter_windows(windows):
+def create_lookup_table(windows):
     '''Create a lookup table from the given list of windows.
 
     The returned dict is in the format window title → X window id.
@@ -162,7 +162,7 @@ def main():
     # the stuff below, as we don't need to call dmenu etc, so we just call it
     # here and exit if the appropriate flag was given.
     if args.empty:
-        exit(0 if goto_workspace(next_empty()) else 1)
+        exit(*goto_workspace(next_empty()))
 
     lookup_func = get_windows
     if args.scratchpad:
