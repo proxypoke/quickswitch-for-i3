@@ -19,7 +19,7 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-__version__ = '1.5'
+__version__ = '2.0'
 
 
 import argparse
@@ -144,6 +144,7 @@ def focus(window):
 def goto_workspace(name):
     '''Jump to the given workspace.'''
     return i3.workspace(name)
+
 
 def main():
     parser = argparse.ArgumentParser(description='''quickswitch for i3''')
