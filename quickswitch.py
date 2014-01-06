@@ -158,7 +158,8 @@ def get_scratchpad_window(window):
 
 def move_window_here(window):
     '''Does `move workspace current` on the specified window.'''
-    return i3.msg(0, "%s move workspace current" % i3.container(id=window))
+    return i3.msg(0, "{} move workspace current".format(
+        i3.container(id=window)))
 
 
 def rename_workspace(old, new):
