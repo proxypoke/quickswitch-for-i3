@@ -107,6 +107,31 @@ def next_empty():
     return str(len(workspaces) + 1)
 
 
+def next_used(number):
+    '''Return the next used numbered workspace after the given number.'''
+    workspaces = sorted([int(ws) for ws in get_workspaces().keys()
+                         if ws.isdecimal()
+                         and int(ws) > number])
+    return workspaces[0] if workspaces else None
+
+
+def degap():
+    '''Remove 'gaps' in the numbered workspaces.
+
+    This searches for non-consecutive numbers in the workspace list, and moves
+    used workspaces as far to the left as possible.
+
+    '''
+    i = 0
+    while True:
+        ws = next_used(i)
+        if ws is None:
+            break
+        elif ws - i > 1:
+            rename_workspace(ws, i + 1)
+        i += 1
+
+
 def create_lookup_table(windows):
     '''Create a lookup table from the given list of windows.
 
@@ -136,6 +161,11 @@ def move_window_here(window):
     return i3.msg(0, "%s move workspace current" % i3.container(id=window))
 
 
+def rename_workspace(old, new):
+    '''Rename a given workspace.'''
+    return i3.msg(0, "rename workspace {} to {}".format(old, new))
+
+
 def focus(window):
     '''Focuses the given window.'''
     return i3.focus(id=window)
@@ -161,6 +191,8 @@ def main():
                         help='go to the next empty, numbered workspace')
     mutgrp.add_argument('-r', '--regex',
                         help='find the first window matching the regex and focus/move it')
+    mutgrp.add_argument('-g', '--degap', action='store_true',
+                        help='make numbered workspaces consecutive (remove gaps)')
 
     parser.add_argument('-d', '--dmenu', default='dmenu -b -i -l 20', help='dmenu command, executed within a shell')
 
@@ -177,6 +209,12 @@ def main():
     if args.empty:
         exit(*goto_workspace(next_empty()))
 
+    # likewise for degapping...
+    if args.degap:
+        degap()
+        exit(0)
+
+    # ...and regex search
     if args.regex:
         find_window_by_regex(args.regex, args.move)
         exit(0)
