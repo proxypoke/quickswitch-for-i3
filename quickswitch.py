@@ -37,14 +37,11 @@ except ImportError:
 
 def check_dmenu():
     '''Check if dmenu is available.'''
-    try:
-        devnull = open(os.devnull)
-        subprocess.Popen(
-            ['dmenu', '-h'], stdout=devnull, stderr=devnull).communicate()
-    except OSError as e:
-        if e.errno == os.errno.ENOENT:
-            return False
-    return True
+    devnull = open(os.devnull)
+    retcode = subprocess.call(["which", "dmenu"],
+                              stdout=devnull,
+                              stderr=devnull)
+    return True if retcode == 0 else False
 
 
 def dmenu(options, dmenu):
