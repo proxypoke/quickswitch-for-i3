@@ -79,6 +79,9 @@ quickswitch-i3``. Alternatively, you can always manually run the setup file with
 Additionally, if you are an Arch user, you can install it from the AUR. The
 package is called ``quickswitch-i3``. The PKGBUILD is also included here.
 
+**NOTE**: I do not maintain the AUR package anymore, since I do not have access
+to any Arch box. See comment on the AUR page.
+
 An overlay for Gentoo is in the works.
 
 Contributions

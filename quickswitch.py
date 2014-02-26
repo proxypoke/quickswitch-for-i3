@@ -19,7 +19,7 @@
 #
 #  0. You just DO WHAT THE FUCK YOU WANT TO.
 
-__version__ = '2.1'
+__version__ = '2.2'
 
 
 import argparse

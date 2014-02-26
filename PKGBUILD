@@ -1,6 +1,6 @@
 # Maintainer: slowpoke <mail+aur at slowpoke dot io>
 pkgname='quickswitch-i3'
-pkgver=2.1
+pkgver=2.2
 pkgrel=1
 pkgdesc="quickly change to and locate windows in i3"
 arch=(any)
