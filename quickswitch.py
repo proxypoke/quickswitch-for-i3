@@ -73,6 +73,8 @@ def find_window_by_regex(regex, move=False):
     for title, id in get_windows().items():
         if cr.match(title):
             action(id)
+            return True
+    return False
 
 
 def get_scratchpad():
@@ -217,8 +219,7 @@ def main():
 
     # ...and regex search
     if args.regex:
-        find_window_by_regex(args.regex, args.move)
-        exit(0)
+        exit(0 if find_window_by_regex(args.regex, args.move) else 1)
 
     lookup_func = get_windows
     if args.scratchpad:
