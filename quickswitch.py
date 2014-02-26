@@ -137,6 +137,7 @@ def create_lookup_table(windows):
 
     The returned dict is in the format window title → X window id.
     '''
+    rename_nonunique(windows)
     lookup = {}
     for window in windows:
         name = window.get('name')
@@ -149,6 +150,19 @@ def create_lookup_table(windows):
             continue
         lookup[name] = id_
     return lookup
+
+
+def rename_nonunique(windows):
+    '''Rename all windows which share a name by appending an index.'''
+    window_names = [window.get('name') for window in windows]
+    for name in window_names:
+        count = window_names.count(name)
+        if count > 1:
+            for i in range(count):
+                index = window_names.index(name)
+                window_names[index] = "{} [{}]".format(name, i + 1)
+    for i in range(len(windows)):
+        windows[i]['name'] = window_names[i]
 
 
 def get_scratchpad_window(window):
