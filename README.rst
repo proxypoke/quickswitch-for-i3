@@ -47,6 +47,14 @@ You can fix this easily with ``-g``/``--degap``, which "defragments" your
 workspaces, without affecting their order (eg, [1, 4, 7] becomes [1, 2, 3] by
 renaming 4 to 2 and 7 to 3).
 
+While on numbered workspaces, it can be pretty handy to jump to the next or
+previous numbered workspace ("cycle" them). ``-p/--previous`` and ``-n/--next``
+do just that. What's more, you can combine them with the ``-m/--move`` flag to
+move the currently focused container to the respective workspace instead. Note
+that ``--previous`` will happily go to negative workspace numbers, which are
+then no longer treated as numbered by i3 (ie, they won't get sorted, like named
+workspaces).
+
 dmenu
 ~~~~~
 
