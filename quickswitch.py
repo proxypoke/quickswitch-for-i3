@@ -8,7 +8,7 @@
 #            DO WHAT THE FUCK YOU WANT TO PUBLIC LICENSE
 #                    Version 2, December 2004
 #
-# Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
+#== Copyright (C) 2004 Sam Hocevar <sam@hocevar.net>
 #
 # Everyone is permitted to copy and distribute verbatim or modified
 # copies of this license document, and changing it is allowed as long
@@ -190,6 +190,21 @@ def goto_workspace(name):
     return i3.workspace(name)
 
 
+def get_current_workspace():
+    '''Get the name of the currently active workspace.'''
+    filtered = [ws for ws in i3.get_workspaces() if ws["focused"] is True]
+    return filtered[0]['name'] if filtered else None
+
+
+def cycle_numbered_workspaces(backwards=False):
+    '''Get the next (previous) numbered workspace.'''
+    current = get_current_workspace()
+    if not current.isdecimal():
+        return None
+    i = int(current)
+    return str(i + 1) if not backwards else str(i - 1)
+
+
 def main():
     parser = argparse.ArgumentParser(description='''quickswitch for i3''')
     parser.add_argument('-m', '--move', default=False, action="store_true",
@@ -207,6 +222,10 @@ def main():
                         help='find the first window matching the regex and focus/move it')
     mutgrp.add_argument('-g', '--degap', action='store_true',
                         help='make numbered workspaces consecutive (remove gaps)')
+    mutgrp.add_argument('-n', '--next', default=False, action='store_true',
+                        help='go to the next (numbered) workspace')
+    mutgrp.add_argument('-p', '--previous', default=False, action='store_true',
+                        help='go to the previous (numbered) workspace')
 
     parser.add_argument('-d', '--dmenu', default='dmenu -b -i -l 20', help='dmenu command, executed within a shell')
 
@@ -228,9 +247,21 @@ def main():
         degap()
         exit(0)
 
-    # ...and regex search
+    # ...and regex search...
     if args.regex:
         exit(0 if find_window_by_regex(args.regex, args.move) else 1)
+
+    # ...as well as workspace cycling
+    if args.next or args.previous:
+        if not get_current_workspace().isdecimal:
+            print("--next and --previous only work on numbered workspaces")
+            exit(1)
+        target_ws = cycle_numbered_workspaces(args.previous)
+        if not args.move:
+            exit(*goto_workspace(target_ws))
+        else:
+            exit(*i3.command("move container to workspace {}".format(target_ws)))
+
 
     lookup_func = get_windows
     if args.scratchpad:
