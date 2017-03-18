@@ -1,6 +1,16 @@
 quickswitch for i3
 ==================
 
+IMPORTANT NOTICE
+----------------
+
+I have given up maintenance of this project a long time ago, since I stopped
+working on it due to personal reasons. Some other i3 enthusiasts have since
+then taken up the project and continued its development and maintenance, so
+if you would like to contribute or report issues, please head towards 
+`this repository <https://github.com/OliverUv/quickswitch-for-i3/>`_. I truly
+appreciate that people have decided to continue this, many thanks to them.
+
 Overview
 --------
 This utility for i3_, inspired by Pentadactyl_'s ``:buffers`` command, allows
